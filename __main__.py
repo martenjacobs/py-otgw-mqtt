@@ -127,10 +127,12 @@ log.info("Initializing OTGW")
 # Import the module for the correct gateway type and return a reference to
 # the type itself, so we can instantiate it easily
 otgw_type = {
-    "serial" : lambda: __import__('opentherm_serial.OTGWSerialClient',
-                                  globals(), locals(), [], 0),
-    "tcp" :    lambda: __import__('opentherm_tcp.OTGWTcpClient',
-                                  globals(), locals(), [], 0),
+    "serial" : lambda: __import__('opentherm_serial',
+                              globals(), locals(), ['OTGWSerialClient'], 0) \
+                              .OTGWSerialClient,
+    "tcp" :    lambda: __import__('opentherm_tcp',
+                              globals(), locals(), ['OTGWTcpClient'], 0) \
+                              .OTGWTcpClient,
                                   # This is actually not implemented yet
 }[settings['otgw']['type']]()
 
