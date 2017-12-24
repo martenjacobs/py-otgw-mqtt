@@ -1,0 +1,19 @@
+{
+    "otgw" : {
+        "type": "serial",
+        "device": "/dev/ttyUSB0",
+        "baudrate": 9600
+    },
+    "mqtt" : {
+        "client_id": "otgw",
+        "host": "127.0.0.1",
+        "port": 1883,
+        "keepalive": 60,
+        "bind_address": "",
+        "username": null,
+        "password": null,
+        "qos": 0,
+        "pub_topic_namespace": "value/otgw",
+        "sub_topic_namespace": "set/otgw"
+    }
+}
