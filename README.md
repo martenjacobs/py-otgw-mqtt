@@ -68,3 +68,50 @@ To install this script as a daemon, run the following commands (on a Debian-base
    ```bash
    journalctl -u py-otgw-mqtt.service -f
    ```
+
+## Topics
+
+### Publish topics
+By default, the service publishes messages to the following MQTT topics:
+
+- value/otgw => _The status of the service_
+- value/otgw/flame_status
+- value/otgw/flame_status_ch
+- value/otgw/flame_status_dhw
+- value/otgw/flame_status_bit
+- value/otgw/control_setpoint
+- value/otgw/remote_override_setpoint
+- value/otgw/max_relative_modulation_level
+- value/otgw/room_setpoint
+- value/otgw/relative_modulation_level
+- value/otgw/ch_water_pressure
+- value/otgw/room_temperature
+- value/otgw/boiler_water_temperature
+- value/otgw/dhw_temperature
+- value/otgw/outside_temperature
+- value/otgw/return_water_temperature
+- value/otgw/dhw_setpoint
+- value/otgw/max_ch_water_setpoint
+- value/otgw/burner_starts
+- value/otgw/ch_pump_starts
+- value/otgw/dhw_pump_starts
+- value/otgw/dhw_burner_starts
+- value/otgw/burner_operation_hours
+- value/otgw/ch_pump_operation_hours
+- value/otgw/dhw_pump_valve_operation_hours
+- value/otgw/dhw_burner_operation_hours
+
+> If you've changed the pub_topic_namespace value in the configuration, replace `value/otgw` with your configured value.
+> __TODO:__ Add description of all topics
+
+### Subscription topics
+By default, the service listens to messages from the following MQTT topics:
+
+- set/otgw/room_setpoint/temporary
+- set/otgw/room_setpoint/constant
+- set/otgw/outside_temperature
+- set/otgw/hot_water/enable
+- set/otgw/hot_water/temperature
+- set/otgw/central_heating/enable
+
+> __TODO:__ Add description of all topics
