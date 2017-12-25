@@ -26,7 +26,8 @@ settings = {
         "password": None,
         "qos": 0,
         "pub_topic_namespace": "value/otgw",
-        "sub_topic_namespace": "set/otgw"
+        "sub_topic_namespace": "set/otgw",
+        "retain": False
     }
 }
 
@@ -52,7 +53,7 @@ def on_mqtt_connect(client, userdata, flags, rc):
         topic=opentherm.topic_namespace,
         payload="online",
         qos=settings['mqtt']['qos'],
-        retain=True)
+        retain=settings['mqtt']['retain'])
 
 def on_mqtt_message(client, userdata, msg):
     # Handle incoming messages
@@ -89,7 +90,7 @@ def on_otgw_message(message):
         topic=message[0],
         payload=message[1],
         qos=settings['mqtt']['qos'],
-        retain=False)
+        retain=settings['mqtt']['retain'])
 
 
 log.info("Initializing MQTT")
