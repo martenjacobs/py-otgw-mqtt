@@ -1,12 +1,12 @@
 {
     "otgw" : {
-        "type": "serial",
-        "device": "/dev/ttyUSB0",
-        "baudrate": 9600
+        "type": "tcp",
+        "ipadress": "192.168.39.144",
+        "port": 2323
     },
     "mqtt" : {
         "client_id": "otgw",
-        "host": "127.0.0.1",
+        "host": "192.168.39.5",
         "port": 1883,
         "keepalive": 60,
         "bind_address": "",

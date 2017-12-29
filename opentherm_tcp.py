@@ -1,5 +1,6 @@
 from opentherm import OTGWClient
 import logging
+import socket
 
 log = logging.getLogger(__name__)
 
@@ -8,49 +9,35 @@ class OTGWTcpClient(OTGWClient):
     A skeleton for a TCP-client based
     """
 
+    def __init__(self, listener, **kwargs):
+        super(OTGWTcpClient, self).__init__(listener)
+        self._args=kwargs
+
     def open(self):
         r"""
         Open the connection to the OTGW
-
-        Must be overridden in implementing classes. Called before reading of
-        the data starts. Should not return until the connection is opened, so
-        an immediately following call to `read` does not fail.
         """
-        # TODO: Implement
-        raise NotImplementedError("Not implemented yet")
+        self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        print (self._args['ipadress'],self._args['port'])
+        self._socket.connect((self._args['ipadress'], self._args['port']))
 
     def close(self):
         r"""
         Close the connection to the OTGW
-
-        Must be overridden in implementing classes. Called after reading of
-        the data is finished. Should not return until the connection is closed.
         """
-        # TODO: Implement
-        raise NotImplementedError("Not implemented yet")
+        self._socket.close()
 
     def write(self, data):
         r"""
         Write data to the OTGW
-
-        Must be overridden in implementing classes. Called when a command is
-        received that should be sent to the OTGW. Should pass on the data
-        as-is, not appending line feeds, carriage returns or anything.
         """
-        # TODO: Implement
-        raise NotImplementedError("Not implemented yet")
+        self._socket.sendall("{}\r\n".format(data.rstrip('\r\n')))
+   
 
-    def read(self, timeout):
+    def read(self):
         r"""
         Read data from the OTGW
-
-        Must be overridden in implementing classes. Called in a loop while the
-        client is running. May return any block of data read from the
-        connection, be it line by line or any other block size. Must return a
-        string. Line feeds and carriage returns should be passed on unchanged.
-        Should adhere to the timeout passed. If only part of a data block is
-        read before the timeout passes, return only the part that was read
-        successfully, even if it is an empty string.
         """
-        # TODO: Implement
-        raise NotImplementedError("Not implemented yet")
+   
+        return self._socket.recv(128).decode()
+      

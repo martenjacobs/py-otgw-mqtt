@@ -202,8 +202,7 @@ class OTGWClient(object):
 
         while self._worker_running:
             # Call the read method of the implementation
-            data += self.read(timeout=0.5)
-
+            data += self.read()
             # Find all the lines in the read data
             while True:
                 m = line_splitter.match(data)
@@ -217,6 +216,7 @@ class OTGWClient(object):
                 for msg in get_messages(m.group().rstrip('\r\n')):
                     try:
                         # Pass each message on to the listener
+                        print(msg)
                         self._listener(msg)
                     except Exception as e:
                         # Log a warning when an exception occurs in the
