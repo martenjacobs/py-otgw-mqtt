@@ -18,7 +18,6 @@ class OTGWTcpClient(OTGWClient):
         Open the connection to the OTGW
         """
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        print (self._args['ipadress'],self._args['port'])
         self._socket.connect((self._args['ipadress'], self._args['port']))
 
     def close(self):
@@ -30,14 +29,16 @@ class OTGWTcpClient(OTGWClient):
     def write(self, data):
         r"""
         Write data to the OTGW
+
+        Packet inspection with wireshark of the original otmonitor learned
+        that the command must only be terminated with a \r and not with \r\n
         """
-        self._socket.sendall("{}\r\n".format(data.rstrip('\r\n')))
+        self._socket.sendall("{}\r".format(data.rstrip('\r\n')).encode())
    
 
     def read(self):
         r"""
         Read data from the OTGW
         """
-   
         return self._socket.recv(128).decode()
       

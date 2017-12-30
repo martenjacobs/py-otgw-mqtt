@@ -216,7 +216,6 @@ class OTGWClient(object):
                 for msg in get_messages(m.group().rstrip('\r\n')):
                     try:
                         # Pass each message on to the listener
-                        print(msg)
                         self._listener(msg)
                     except Exception as e:
                         # Log a warning when an exception occurs in the
