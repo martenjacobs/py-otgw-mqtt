@@ -11,7 +11,6 @@ class OTGWTcpClient(OTGWClient):
 
     def __init__(self, listener, **kwargs):
         super(OTGWTcpClient, self).__init__(listener)
-        self._args=kwargs
         self._host = kwargs['host']
         self._port = int(kwargs['port'])
         self._socket = None
@@ -21,7 +20,6 @@ class OTGWTcpClient(OTGWClient):
         Open the connection to the OTGW
         """
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._socket.connect((self._args['ipadress'], self._args['port']))
         self._socket.connect((self._host, self._port))
         self._socket.setblocking(1)
         self._socket.settimeout(0.1)
@@ -39,16 +37,12 @@ class OTGWTcpClient(OTGWClient):
         Packet inspection with wireshark of the original otmonitor learned
         that the command must only be terminated with a \r and not with \r\n
         """
-        self._socket.sendall("{}\r".format(data.rstrip('\r\n')).encode())
-   
         self._socket.sendall(data)
 
-    def read(self):
+    def read(self, timeout):
         r"""
         Read data from the OTGW
         """
-        return self._socket.recv(128).decode()
-      
         if self._socket.gettimeout() != timeout:
             self._socket.settimeout(timeout)
         return self._socket.recv(128)
