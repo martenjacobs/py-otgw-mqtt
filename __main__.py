@@ -58,18 +58,19 @@ def on_mqtt_message(client, userdata, msg):
     # Handle incoming messages
     log.info("Received message on topic {} with payload {}".format(
                 msg.topic, str(msg.payload)))
+    namespace = settings['mqtt']['sub_topic_namespace']
     command_generators={
-        "set/otgw/room_setpoint/temporary": \
+        "{}/room_setpoint/temporary".format(namespace): \
             lambda _ :"TT={:.2f}".format(float(_)),
-        "set/otgw/room_setpoint/constant":  \
+        "{}/room_setpoint/constant".format(namespace):  \
             lambda _ :"TC={:.2f}".format(float(_)),
-        "set/otgw/outside_temperature":     \
+        "{}/outside_temperature".format(namespace):     \
             lambda _ :"OT={:.2f}".format(float(_)),
-        "set/otgw/hot_water/enable":        \
+        "{}/hot_water/enable".format(namespace)        \
             lambda _ :"HW={}".format('1' if _ in true_values else '0'),
-        "set/otgw/hot_water/temperature":   \
+        "{}/hot_water/temperature".format(namespace):   \
             lambda _ :"SW={:.2f}".format(float(_)),
-        "set/otgw/central_heating/enable":  \
+        "{}/central_heating/enable".format(namespace):  \
             lambda _ :"CH={}".format('1' if _ in true_values else '0'),
         # TODO: "set/otgw/raw/+": lambda _ :publish_to_otgw("PS", _)
     }
