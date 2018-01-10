@@ -1,5 +1,6 @@
 import re
 from threading import Lock, Thread
+from time import sleep
 import logging
 
 log = logging.getLogger(__name__)
@@ -184,6 +185,25 @@ class OTGWClient(object):
         self._worker_running = False
         self.join()
 
+    def reconnect(self):
+        r"""
+        Attempt to reconnect when the connection is lost
+        """
+        try:
+            self.close()
+        except Exception:
+            pass
+
+        while self._worker_running:
+            try:
+                self.open()
+                break
+            except Exception as e:
+                log.warn(("Could not reconnect: {}. "
+                         "Will retry in 10 seconds").format(e.message))
+                sleep(10)
+
+
     def _worker(self):
         # _worker_running should be True while the worker is running
         self._worker_running = True
@@ -202,7 +222,11 @@ class OTGWClient(object):
 
         while self._worker_running:
             # Call the read method of the implementation
-            data += self.read()
+            try:
+                data += self.read()
+            except ConnectionLostError:
+                log.warn("Connection lost, will attempt to reconnect")
+                self.reconnect()
             # Find all the lines in the read data
             while True:
                 m = line_splitter.match(data)
@@ -228,3 +252,7 @@ class OTGWClient(object):
         # After the read loop, close the connection and clean up
         self.close()
         self._worker_thread = None
+
+class ConnectionLostError(Error):
+    def __init__(self, message):
+        super(ConnectionLostError, self).__init__(message)

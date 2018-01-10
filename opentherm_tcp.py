@@ -1,4 +1,4 @@
-from opentherm import OTGWClient
+from opentherm import OTGWClient, ConnectionLostError
 import logging
 import socket
 
@@ -21,14 +21,17 @@ class OTGWTcpClient(OTGWClient):
         """
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._socket.connect((self._host, self._port))
-        self._socket.setblocking(1)
-        self._socket.settimeout(0.1)
+        self._socket.setblocking(0)
 
     def close(self):
         r"""
         Close the connection to the OTGW
         """
-        self._socket.close()
+        try:
+            self._socket.close()
+        except socket.error as e:
+            log.warn("Failed to close socket with error code {}: {}".format(
+                     e.errno, e.message))
 
     def write(self, data):
         r"""
@@ -37,12 +40,23 @@ class OTGWTcpClient(OTGWClient):
         Packet inspection with wireshark of the original otmonitor learned
         that the command must only be terminated with a \r and not with \r\n
         """
-        self._socket.sendall(data)
+        try:
+            self._socket.sendall(data)
+        except socket.error as e:
+            log.warn("Failed to read with error code {}: {}".format(
+                     e.errno, e.message))
+             raise ConnectionLostError(e.message)
 
     def read(self, timeout):
         r"""
         Read data from the OTGW
         """
-        if self._socket.gettimeout() != timeout:
-            self._socket.settimeout(timeout)
-        return self._socket.recv(128)
+        # This blocks until the socket is ready or the timeout has passed
+        try:
+            ready = select.select([self._socket], [], [], timeout)
+            if ready[0]:
+                return self._socket.recv(128)
+        except socket.error as e:
+            log.warn("Failed to read with error code {}: {}".format(
+                     e.errno, e.message))
+             raise ConnectionLostError(e.message)
