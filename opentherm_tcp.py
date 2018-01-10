@@ -1,4 +1,4 @@
-from opentherm import OTGWClient, ConnectionLostError
+from opentherm import OTGWClient, ConnectionException
 import logging
 import socket
 
@@ -45,7 +45,7 @@ class OTGWTcpClient(OTGWClient):
         except socket.error as e:
             log.warn("Failed to read with error code {}: {}".format(
                      e.errno, e.message))
-             raise ConnectionLostError(e.message)
+             raise ConnectionException(e.message)
 
     def read(self, timeout):
         r"""
@@ -59,4 +59,4 @@ class OTGWTcpClient(OTGWClient):
         except socket.error as e:
             log.warn("Failed to read with error code {}: {}".format(
                      e.errno, e.message))
-             raise ConnectionLostError(e.message)
+             raise ConnectionException(e.message)
