@@ -79,7 +79,7 @@ def on_mqtt_message(client, userdata, msg):
         # Get the command and send it to the OTGW
         command = command_generator(msg.payload)
         log.info("Sending command: '{}'".format(command))
-        otgw_client.write("{}\r".format(command))
+        otgw_client.send("{}\r".format(command))
 
 
 def on_otgw_message(message):
