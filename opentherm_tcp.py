@@ -12,6 +12,9 @@ class OTGWTcpClient(OTGWClient):
     def __init__(self, listener, **kwargs):
         super(OTGWTcpClient, self).__init__(listener)
         self._args=kwargs
+        self._host = kwargs['host']
+        self._port = int(kwargs['port'])
+        self._socket = None
 
     def open(self):
         r"""
@@ -19,6 +22,9 @@ class OTGWTcpClient(OTGWClient):
         """
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._socket.connect((self._args['ipadress'], self._args['port']))
+        self._socket.connect((self._host, self._port))
+        self._socket.setblocking(1)
+        self._socket.settimeout(0.1)
 
     def close(self):
         r"""
@@ -35,6 +41,7 @@ class OTGWTcpClient(OTGWClient):
         """
         self._socket.sendall("{}\r".format(data.rstrip('\r\n')).encode())
    
+        self._socket.sendall(data)
 
     def read(self):
         r"""
@@ -42,3 +49,6 @@ class OTGWTcpClient(OTGWClient):
         """
         return self._socket.recv(128).decode()
       
+        if self._socket.gettimeout() != timeout:
+            self._socket.settimeout(timeout)
+        return self._socket.recv(128)

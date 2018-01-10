@@ -3,7 +3,8 @@
 This package allows for communication between an OpenTherm Gateway, running the [firmware by Schelte Bron](http://otgw.tclcode.com/) and an MQTT service. It was tested using [Home Assistant](http://www.home-assistant.io)'s built-in MQTT broker.
 
 ## Supported OTGW gateway communication protocols
-Currently, only direct serial communication is supported, but implementing further types is pretty easy. I'm open to pull requests.
+Currently, only direct serial and TCP communication are supported, but implementing further types is pretty easy. I'm open to pull requests.
+> NOTE: TCP connections are, as yet, untested. Please open an issue if you're experiencing difficulties.
 
 ## Supported MQTT brokers
 The MQTT client used is [paho](https://www.eclipse.org/paho/). It's one of the most widely-used MQTT clients for Python, so it should work on most brokers. If you're having problems with a certain type, please open an issue or send me a pull request with a fix.
@@ -12,6 +13,7 @@ The MQTT client used is [paho](https://www.eclipse.org/paho/). It's one of the m
 The configuration for the bridge is located in config.json.
 
 ### Example configuration
+To use the serial connection to the OTGW, use a config.json like the following:
 ```json
 {
     "otgw" : {
@@ -32,6 +34,15 @@ The configuration for the bridge is located in config.json.
         "sub_topic_namespace": "set/otgw"
     }
 }
+```
+
+To use a TCP connection, replace the OTGW section with this:
+```json
+    "otgw" : {
+        "type": "tcp",
+        "host": "<OTGW HOSTNAME OR IP>",
+        "port": 2323
+    },
 ```
 
 ## Installation
