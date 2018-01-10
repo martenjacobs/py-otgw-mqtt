@@ -24,7 +24,7 @@ class OTGWSerialClient(OTGWClient):
             baudrate=self._args.get('baudrate', 9600),
             bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE,
             stopbits=serial.STOPBITS_ONE, timeout=0.1)
-
+        
     def close(self):
         r"""
         Close the serial connection
