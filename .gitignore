@@ -1,3 +1,4 @@
 *.pyc
 /.vs/py-otgw-mqtt/v15/.suo
 /py-otgw-mqtt.pyproj
+/py-otgw-mqtt.sln
