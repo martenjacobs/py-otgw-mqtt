@@ -20,9 +20,13 @@ class OTGWTcpClient(OTGWClient):
         r"""
         Open the connection to the OTGW
         """
-        self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._socket.connect((self._host, self._port))
-        self._socket.setblocking(0)
+        try:
+          self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+          self._socket.connect((self._host, self._port))
+          self._socket.setblocking(0)
+        except socket.error as e:
+            log.warn("Failed to close socket: {}".format(e))
+            raise ConnectionException(str(e))
 
     def close(self):
         r"""

@@ -212,8 +212,12 @@ class OTGWClient(object):
         # _worker_running should be True while the worker is running
         self._worker_running = True
 
-        # Open the connection to the OTGW
-        self.open()
+        try:
+          # Open the connection to the OTGW
+           self.open()
+        except ConnectionException:
+           log.warn("No connection, will attempt to make a new connection")
+           self.reconnect()
 
         # Compile a regex that will only match the first part of a string, up
         # to and including the first time a line break and/or carriage return
