@@ -2,3 +2,6 @@
 /.vs/py-otgw-mqtt/v15/.suo
 /py-otgw-mqtt.pyproj
 /py-otgw-mqtt.sln
+/.vs/config/applicationhost.config
+/.vs/ProjectSettings.json
+/.vs

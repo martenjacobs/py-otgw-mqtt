@@ -202,7 +202,7 @@ class OTGWClient(object):
                 break
             except Exception as e:
                 log.warn(("Could not reconnect: {}. "
-                         "Will retry in 10 seconds").format(e.message))
+                         "Will retry in 10 seconds").format(e))
                 sleep(10)
 
     def send(self, data):

@@ -1,6 +1,7 @@
 from opentherm import OTGWClient, ConnectionException
 import logging
 import socket
+import select
 
 log = logging.getLogger(__name__)
 
@@ -30,8 +31,7 @@ class OTGWTcpClient(OTGWClient):
         try:
             self._socket.close()
         except socket.error as e:
-            log.warn("Failed to close socket with error code {}: {}".format(
-                     e.errno, e.message))
+            log.warn("Failed to close socket: {}".format(e))
 
     def write(self, data):
         r"""
@@ -40,12 +40,11 @@ class OTGWTcpClient(OTGWClient):
         Packet inspection with wireshark of the original otmonitor learned
         that the command must only be terminated with a \r and not with \r\n
         """
-        try:
-            self._socket.sendall(data)
+        try: 
+            self._socket.sendall("{}\r".format(data.rstrip('\r\n')).encode())
         except socket.error as e:
-            log.warn("Failed to read with error code {}: {}".format(
-                     e.errno, e.message))
-             raise ConnectionException(e.message)
+            log.warn("Failed to write: {}".format(e))
+            raise ConnectionException(str(e))
 
     def read(self, timeout):
         r"""
@@ -55,8 +54,8 @@ class OTGWTcpClient(OTGWClient):
         try:
             ready = select.select([self._socket], [], [], timeout)
             if ready[0]:
-                return self._socket.recv(128)
+                return self._socket.recv(128).decode()              
         except socket.error as e:
-            log.warn("Failed to read with error code {}: {}".format(
-                     e.errno, e.message))
-             raise ConnectionException(e.message)
+            log.warn("Failed to read: {}".format(e))
+            raise ConnectionException(str(e))
+        return ""
