@@ -66,7 +66,7 @@ def on_mqtt_message(client, userdata, msg):
             lambda _ :"TC={:.2f}".format(float(_)),
         "{}/outside_temperature".format(namespace):     \
             lambda _ :"OT={:.2f}".format(float(_)),
-        "{}/hot_water/enable".format(namespace)        \
+        "{}/hot_water/enable".format(namespace):        \
             lambda _ :"HW={}".format('1' if _ in true_values else '0'),
         "{}/hot_water/temperature".format(namespace):   \
             lambda _ :"SW={:.2f}".format(float(_)),
