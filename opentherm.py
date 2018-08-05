@@ -202,7 +202,7 @@ class OTGWClient(object):
 
         while self._worker_running:
             # Call the read method of the implementation
-            data += self.read(timeout=0.5)
+            data += self.read(timeout=0.5).decode()
 
             # Find all the lines in the read data
             while True:
