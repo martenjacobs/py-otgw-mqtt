@@ -62,15 +62,15 @@ def on_mqtt_message(client, userdata, msg):
     namespace = settings['mqtt']['sub_topic_namespace']
     command_generators={
         "{}/room_setpoint/temporary".format(namespace): \
-            lambda _ :"TT={:.2f}".format(float(_) if isfloat(_) else 0),
+            lambda _ :"TT={:.2f}".format(float(_) if is_float(_) else 0),
         "{}/room_setpoint/constant".format(namespace):  \
-            lambda _ :"TC={:.2f}".format(float(_) if isfloat(_) else 0),
+            lambda _ :"TC={:.2f}".format(float(_) if is_float(_) else 0),
         "{}/outside_temperature".format(namespace):     \
-            lambda _ :"OT={:.2f}".format(float(_) if isfloat(_) else 99),
+            lambda _ :"OT={:.2f}".format(float(_) if is_float(_) else 99),
         "{}/hot_water/enable".format(namespace):        \
             lambda _ :"HW={}".format('1' if _ in true_values else '0' if _ in false_values else 'T'),
         "{}/hot_water/temperature".format(namespace):   \
-            lambda _ :"SW={:.2f}".format(float(_) if isfloat(_) else 60),
+            lambda _ :"SW={:.2f}".format(float(_) if is_float(_) else 60),
         "{}/central_heating/enable".format(namespace):  \
             lambda _ :"CH={}".format('0' if _ in false_values else '1'),
         # TODO: "set/otgw/raw/+": lambda _ :publish_to_otgw("PS", _)
