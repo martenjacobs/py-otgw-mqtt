@@ -93,6 +93,12 @@ def on_otgw_message(message):
         qos=settings['mqtt']['qos'],
         retain=settings['mqtt']['retain'])
 
+def is_float(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
 
 log.info("Initializing MQTT")
 
