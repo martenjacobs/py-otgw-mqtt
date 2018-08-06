@@ -58,7 +58,7 @@ def on_mqtt_connect(client, userdata, flags, rc):
 def on_mqtt_message(client, userdata, msg):
     # Handle incoming messages
     log.info("Received message on topic {} with payload {}".format(
-                msg.topic, str(msg.payload)))
+                msg.topic, str(msg.payload.decode('ascii', 'ignore'))))
     namespace = settings['mqtt']['sub_topic_namespace']
     command_generators={
         "{}/room_setpoint/temporary".format(namespace): \
@@ -79,7 +79,7 @@ def on_mqtt_message(client, userdata, msg):
     command_generator = command_generators.get(msg.topic)
     if command_generator:
         # Get the command and send it to the OTGW
-        command = command_generator(msg.payload)
+        command = command_generator(msg.payload.decode('ascii', 'ignore'))
         log.info("Sending command: '{}'".format(command))
         otgw_client.write("{}\r".format(command))
 
