@@ -8,6 +8,7 @@ import paho.mqtt.client as mqtt
 
 # Values used to parse boolean values of incoming messages
 true_values=('True', 'true', '1', 'y', 'yes')
+false_values=('False', 'false', '0', 'n', 'no')
 
 # Default settings
 settings = {
@@ -57,28 +58,28 @@ def on_mqtt_connect(client, userdata, flags, rc):
 def on_mqtt_message(client, userdata, msg):
     # Handle incoming messages
     log.info("Received message on topic {} with payload {}".format(
-                msg.topic, str(msg.payload)))
+                msg.topic, str(msg.payload.decode('ascii', 'ignore'))))
     namespace = settings['mqtt']['sub_topic_namespace']
     command_generators={
         "{}/room_setpoint/temporary".format(namespace): \
-            lambda _ :"TT={:.2f}".format(float(_)),
+            lambda _ :"TT={:.2f}".format(float(_) if is_float(_) else 0),
         "{}/room_setpoint/constant".format(namespace):  \
-            lambda _ :"TC={:.2f}".format(float(_)),
+            lambda _ :"TC={:.2f}".format(float(_) if is_float(_) else 0),
         "{}/outside_temperature".format(namespace):     \
-            lambda _ :"OT={:.2f}".format(float(_)),
+            lambda _ :"OT={:.2f}".format(float(_) if is_float(_) else 99),
         "{}/hot_water/enable".format(namespace):        \
-            lambda _ :"HW={}".format('1' if _ in true_values else '0'),
+            lambda _ :"HW={}".format('1' if _ in true_values else '0' if _ in false_values else 'T'),
         "{}/hot_water/temperature".format(namespace):   \
-            lambda _ :"SW={:.2f}".format(float(_)),
+            lambda _ :"SW={:.2f}".format(float(_) if is_float(_) else 60),
         "{}/central_heating/enable".format(namespace):  \
-            lambda _ :"CH={}".format('1' if _ in true_values else '0'),
+            lambda _ :"CH={}".format('0' if _ in false_values else '1'),
         # TODO: "set/otgw/raw/+": lambda _ :publish_to_otgw("PS", _)
     }
     # Find the correct command generator from the dict above
     command_generator = command_generators.get(msg.topic)
     if command_generator:
         # Get the command and send it to the OTGW
-        command = command_generator(msg.payload)
+        command = command_generator(msg.payload.decode('ascii', 'ignore'))
         log.info("Sending command: '{}'".format(command))
         otgw_client.write("{}\r".format(command))
 
@@ -92,6 +93,12 @@ def on_otgw_message(message):
         qos=settings['mqtt']['qos'],
         retain=settings['mqtt']['retain'])
 
+def is_float(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
 
 log.info("Initializing MQTT")
 

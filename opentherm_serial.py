@@ -35,7 +35,7 @@ class OTGWSerialClient(OTGWClient):
         r"""
         Write data to the serial device
         """
-        self._serial.write("{}\r\n".format(data.rstrip('\r\n')))
+        self._serial.write("{}\r\n".format(data.rstrip('\r\n')).encode('ascii', 'ignore'))
         self._serial.flush()
 
     def read(self, timeout):
@@ -44,4 +44,4 @@ class OTGWSerialClient(OTGWClient):
         """
         if(self._serial.timeout != timeout):
             self._serial.timeout = timeout
-        return self._serial.read(128)
+        return self._serial.read(128).decode('ascii', 'ignore')
