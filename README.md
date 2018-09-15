@@ -61,7 +61,7 @@ To install this script as a daemon, run the following commands (on a Debian-base
    ```bash
    sudo git clone https://github.com/martenjacobs/py-otgw-mqtt.git .
    ```
-4. Change `config.json` with your favorite text editor
+4. Copy `config.json.default` to `config.json` and modify with your favorite text editor
 5. Copy the service file to the systemd directory. If you used a different folder name than `/usr/lib/py-otgw-mqtt` you will need to change the `WorkingDirectory` in the file first.
    ```bash
    sudo cp ./py-otgw-mqtt.service /etc/systemd/system/
