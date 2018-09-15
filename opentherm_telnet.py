@@ -6,7 +6,7 @@ log = logging.getLogger(__name__)
 
 class OTGWTcpClient(OTGWClient):
     r"""
-    A skeleton for a TCP-client based
+    A telnet-based OTGWClient implementation
     """
     def __init__(self, listener, **kwargs):
         super(OTGWTcpClient, self).__init__(listener)
