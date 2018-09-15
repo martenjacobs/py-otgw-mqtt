@@ -1,20 +1,20 @@
 {
     "otgw" : {
         "type": "tcp",
-        "ipadress": "192.168.39.144",
-        "port": 2323
+        "host": "192.168.1.203",
+        "port": 23
     },
     "mqtt" : {
         "client_id": "otgw",
-        "host": "192.168.39.5",
+        "host": "192.168.1.10",
         "port": 1883,
         "keepalive": 60,
         "bind_address": "",
         "username": null,
         "password": null,
         "qos": 0,
-        "pub_topic_namespace": "value/otgw",
-        "sub_topic_namespace": "set/otgw",
+        "pub_topic_namespace": "stat/otgw",
+        "sub_topic_namespace": "cmnd/otgw",
         "retain": false
     }
 }

@@ -235,7 +235,10 @@ class OTGWClient(object):
             except ConnectionException:
                 log.warn("Connection lost, will attempt to reconnect")
                 self.reconnect()
-            # Find all the lines in the read data
+            except TypeError:
+                log.info("Read returned non-string value")
+                pass   
+			# Find all the lines in the read data
             while True:
                 m = line_splitter.match(data)
                 if not m:
