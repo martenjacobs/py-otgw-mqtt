@@ -133,7 +133,9 @@ otgw_type = {
     "tcp" :    lambda: __import__('opentherm_tcp',
                               globals(), locals(), ['OTGWTcpClient'], 0) \
                               .OTGWTcpClient,
-                                  # This is actually not implemented yet
+	"telnet" :    lambda: __import__('opentherm_telnet',
+                              globals(), locals(), ['OTGWTcpClient'], 0) \
+                              .OTGWTcpClient,
 }[settings['otgw']['type']]()
 
 # Create the actual instance of the client
