@@ -9,6 +9,7 @@ log = logging.getLogger(__name__)
 # Default namespace for the topics. Will be overwritten with the value in
 # config
 topic_namespace="value/otgw"
+sub_topic_namespace="set/otgw"
 
 # Parse hex string to int
 def hex_int(hex):

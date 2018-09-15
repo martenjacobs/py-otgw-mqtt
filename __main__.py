@@ -35,12 +35,16 @@ settings = {
 with open('config.json') as f:
     settings.update(json.load(f))
 
-# Set the namespace of the mqtt messages from the settings
-opentherm.topic_namespace=settings['mqtt']['pub_topic_namespace']
+
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
+
+# Set the namespace of the mqtt messages from the settings
+opentherm.topic_namespace=settings['mqtt']['pub_topic_namespace']
+opentherm.sub_topic_namespace=settings['mqtt']['sub_topic_namespace']
+log.debug("opentherm.sub_topic_namespace = {}".format(opentherm.sub_topic_namespace))
 
 def on_mqtt_connect(client, userdata, flags, rc):
     # Subscribe to all topics in our namespace when we're connected. Send out
@@ -59,27 +63,28 @@ def on_mqtt_message(client, userdata, msg):
     log.info("Received message on topic {} with payload {}".format(
                 msg.topic, str(msg.payload)))
     command_generators={
-        "set/otgw/room_setpoint/temporary": \
+        "/room_setpoint/temporary": \
             lambda _ :"TT={:.2f}".format(float(_)),
-        "set/otgw/room_setpoint/constant":  \
+        "/room_setpoint/constant":  \
             lambda _ :"TC={:.2f}".format(float(_)),
-        "set/otgw/outside_temperature":     \
+        "/outside_temperature":     \
             lambda _ :"OT={:.2f}".format(float(_)),
-        "set/otgw/hot_water/enable":        \
+        "/hot_water/enable":        \
             lambda _ :"HW={}".format('1' if _ in true_values else '0'),
-        "set/otgw/hot_water/temperature":   \
+        "/hot_water/temperature":   \
             lambda _ :"SW={:.2f}".format(float(_)),
-        "set/otgw/central_heating/enable":  \
+        "/central_heating/enable":  \
             lambda _ :"CH={}".format('1' if _ in true_values else '0'),
         # TODO: "set/otgw/raw/+": lambda _ :publish_to_otgw("PS", _)
     }
     # Find the correct command generator from the dict above
-    command_generator = command_generators.get(msg.topic)
+    log.debug("Finding command: '{}'".format(msg.topic.replace(opentherm.sub_topic_namespace,"")))
+    command_generator = command_generators.get(msg.topic.replace(opentherm.sub_topic_namespace,""))
     if command_generator:
         # Get the command and send it to the OTGW
         command = command_generator(msg.payload)
         log.info("Sending command: '{}'".format(command))
-        otgw_client.send("{}\r".format(command))
+        otgw_client.send("{}/{}\r".format(opentherm.topic_namespace,command))
 
 
 def on_otgw_message(message):
