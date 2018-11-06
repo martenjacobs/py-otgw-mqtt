@@ -53,7 +53,7 @@ def on_mqtt_connect(client, userdata, flags, rc):
         topic=opentherm.topic_namespace,
         payload="online",
         qos=settings['mqtt']['qos'],
-        retain=settings['mqtt']['retain'])
+        retain=True)
 
 def on_mqtt_message(client, userdata, msg):
     # Handle incoming messages
