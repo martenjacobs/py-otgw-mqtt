@@ -1,6 +1,7 @@
 from opentherm import OTGWClient, ConnectionException
 import logging
 import socket
+import select
 
 log = logging.getLogger(__name__)
 
