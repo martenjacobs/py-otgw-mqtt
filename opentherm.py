@@ -231,7 +231,7 @@ class OTGWClient(object):
                     self.write(self._send_buffer[0])
                     self._send_buffer.popleft()
 
-                data += self.read(timeout=0.5)
+                data += self.read(timeout=0.5) or ""
             except ConnectionException:
                 log.warn("Connection lost, will attempt to reconnect")
                 self.reconnect()
