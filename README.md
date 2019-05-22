@@ -1,3 +1,7 @@
+# THIS PACKAGE IS NOT ACTIVELY MAINTAINED
+
+Hi everyone, I've changed my set-up so I now use Node-RED for most of my home automation, including control of my OTGW. That means I don't really have any use for this package anymore. If someone would like maintain this package, please let me know. Otherwise, I'll still try to respond to issues, but I'm probably not going to add any features or fix bugs anytime soon.
+
 # Python OTGW MQTT bridge
 
 This package allows for communication between an OpenTherm Gateway, running the [firmware by Schelte Bron](http://otgw.tclcode.com/) and an MQTT service. It was tested using [Home Assistant](http://www.home-assistant.io)'s built-in MQTT broker.
