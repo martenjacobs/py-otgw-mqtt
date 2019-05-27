@@ -2,6 +2,8 @@
 
 Hi everyone, I've changed my set-up so I now use Node-RED for most of my home automation, including control of my OTGW. That means I don't really have any use for this package anymore. If someone would like maintain this package, please let me know. Otherwise, I'll still try to respond to issues, but I'm probably not going to add any features or fix bugs anytime soon.
 
+You may want to look at one of the forks of this repo to find a maintained version. If you just want to connect your OTGW to Home Assistant, I suggest you look at the [official component](https://www.home-assistant.io/components/opentherm_gw/). It's possible to use this component over TCP with ser2net as per [the example here](https://www.home-assistant.io/components/opentherm_gw/#example).
+
 # Python OTGW MQTT bridge
 
 This package allows for communication between an OpenTherm Gateway, running the [firmware by Schelte Bron](http://otgw.tclcode.com/) and an MQTT service. It was tested using [Home Assistant](http://www.home-assistant.io)'s built-in MQTT broker.
